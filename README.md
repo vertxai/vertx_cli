@@ -3,8 +3,12 @@ If you do not want to spend the next five minutes going through the documentatio
 ```bash
 curl -X POST "https://api.vertx.ai/v1/search/" -H "X-Session-Token: YOUR_VERTX_API_KEY" -F "media_file=@/path/to/media_file.mp4" 
 ```
+[//]: ############
 - Send us a [message](https://vertx.ai/#contact) to get your API key if you don't have it yet.
+
+[//]: ############
 - Visit [Vertx Playground](https://portal.vertx.ai/playground) to play with the API from your browser following this one minute [video tutorial](https://www.youtube.com/watch?v=Ye3fP01fei4).
+
 - Join [VertxAI Slack](https://join.slack.com/t/vertx-ai/shared_invite/zt-l2j9eett-5UYrpvy_cGp7OG~TgmFvhA) community to get help.
 
 # Vertx Technology
