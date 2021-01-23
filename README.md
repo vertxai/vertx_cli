@@ -1,100 +1,110 @@
-# TL;DR
-If you do not want to spend the next five minutes going through the documentation and want to start using Vertx API immediately, open your terminal and start identifying your media content right away:
-```bash
-curl -X POST "https://api.vertx.ai/v1/search/" -H "X-Session-Token: YOUR_VERTX_API_KEY" -F "media_file=@/path/to/media_file.mp4" 
-```
+# Vertx
+Vertx provides a **technology for content-based multimedia search** (query by example) in large-scale multimedia databases containing millions of items. It has the ability to operate on severely distorted media content (for example, camera jitter, screen with glare, acoustic noise) and can robustly identify content from multimedia clips.
+
+**_You can use it:_**
+  - *For copyright protection:* scan video and audio content against a database of copyrighted music, movies, and TV shows; find instantly any matching items in user uploaded clips.
+  - *Live broadcast monitoring:* scan any live multimedia streams and find matches with broadcast TV or radio channels.
+  - *On-device content identification:* identify audio and video content on a mobile device with no internet connection.
+
+**_What to do next:_**
 [//]: ############
-- Send us a [message](https://vertx.ai/#contact) to get your API key if you don't have it yet.
-
+  - Send us a [message](https://vertx.ai/#contact) to get your API key if you don't have it yet.
 [//]: ############
-- Visit [Vertx Playground](https://portal.vertx.ai/playground) to play with the API from your browser following this one minute [video tutorial](https://www.youtube.com/watch?v=Ye3fP01fei4).
+  - Try the Vertx technology using your [preferred way](#try-vertx) and interpret the [obtained results](#interpreting-search-results)!
+  - Explore the API through [Vertx Playground](https://portal.vertx.ai/playground)!
+  - Read more about [our technology](#vertx-technology)!
+  - Join [VertxAI Slack](https://join.slack.com/t/vertx-ai/shared_invite/zt-l2j9eett-5UYrpvy_cGp7OG~TgmFvhA) community to get help!
+  - Explore our [subscription plans](#subscription-plans) and the limitations of our free public version!
+  - [Contact us](https://vertx.ai/#contact) if you have any suggestions or specific requirements enquiries!
 
-- Join [VertxAI Slack](https://join.slack.com/t/vertx-ai/shared_invite/zt-l2j9eett-5UYrpvy_cGp7OG~TgmFvhA) community to get help.
 
-# Vertx Technology
-Vertx technology facilitates content-based audio/video search (query by example) in large-scale multimedia databases containing millions of items. 
-It works amazingly fast, allowing one to identify any piece of content within a blink of an eye. 
-It has the ability to operate on severely distorted media content (for example, camera jitter, screen with glare, acoustic noise) and can robustly identify content from video clips. 
-Check out this [YouTube video](https://youtu.be/QFz1yxtYYRQ) that was captured using a cellphone camera pointed at a TV screen running "Troy" movie and some music in the background.
-Vertx is able to scan the audio and video content of the clip against multimedia databases containing millions of songs and thousands of movies and successfully identify all matches in a second. 
+# Try Vertx
+You can employ Vertx technology through a number of ways (**note that you must have a valid API token to make API requests!**):
+- Through [REST API](#rest-api);
+- Using [Vertx command line utility](#vertx-command-line-utility) operating through [gRPC](https://github.com/grpc/grpc) protocol;
+- Through the [container interface](#container-interface) (we support Docker and Podman);
+- iOS and Android SDKs.
 
-This video will be used in API search  request examples throughout the rest of the documentation.
-The video file `sample.mp4` is included into [Vertx command line utility](https://github.com/vertxai/vertx_cli/releases) release distribution. 
-It can also be downloaded using [direct link](https://github.com/vertxai/vertx_cli/releases/download/v1.0.2/sample.mp4)   
+To show the power of Vertx technology, we will use the following [video sample](https://youtu.be/QFz1yxtYYRQ) that has been *captured using a cellphone camera pointed at a TV screen* running "Troy" movie with some music in the background. You can download this `sample.mp4` file using a [direct link](https://github.com/vertxai/vertx_cli/releases/download/v1.0.2/sample.mp4).
 
-[//]: ############
+Please refer to the [Vertx Playground](https://portal.vertx.ai/playground) for the complete list of available API end-points.
 
-![alt text](images/troy.jpeg "Scene from \"Troy\" movie.")
 
-[//]: ############
+## REST API
+The simplest way to start using Vertx technology is through REST API. You can employ REST API either by making requests using [Vertx Playground](https://portal.vertx.ai/playground) frontend or utilizing a command line utility like [curl](https://curl.se/).
 
-# Vertx architecture
-Vertx technology is based on extracting digital signatures from audio and video content (called digital fingerpints) and adding them to a searchable index. 
-Much likely like human fingerprints, digital fingerprints uniquely identify a chunk of audio/video content.
-Fingerprints are highly compressed when compared to the original media content and it's not possible to restore the original content from digital fingerprints.
+If you choose this option, note that in this case, the media content is uploaded to our servers. There, audio and video fingerprints extracted from the uploaded content and matched against reference content. Therefore, REST API is a subject to [additional limitations](#subscription-plans).
 
-The three components of the system are Vertx cloud, Vertx backend and Vertx clients. 
-Vertx backend contains indices of reference content and serves search and registration requests from Vertx backend.
-Vertx clients upload media content for fingerprint extraction to the Vertx backend servers using Vertx REST API. 
-Fingerprint extraction can also happen on the client side, an example being [Vertx command line utility](https://github.com/vertxai/vertx_cli/releases). 
-In that case, extracted fingerprints are sent to the Vertx backend servers and original media content is not being uploaded.
-Metadata for matched reference content is returned to the client.
 
-![alt text](images/vertx.png "Vertx architecture")
+### Vertx Playground Frontend
+You can try Vertx Technology using our Playground. Visit [Vertx Playground](https://portal.vertx.ai/playground) to play with the API directly from your browser. This one-minute [video tutorial](https://www.youtube.com/watch?v=Ye3fP01fei4) shows the process in details.
 
-## Content buckets
-All the reference content in the Vertx cloud is organized into buckets. Buckets can be private or public.
-By default, all search requests are sent to public bucket. It contains fingerprints for millions of songs and thousands of movies. 
-Private buckets contain content registered by a customer and can only be accessed and managed by that customer.
 
-## Vertx API
-There are a number of ways to search, register, and manage audio and video content:
-- REST API 
-- [GRPC](https://github.com/grpc/grpc) API through [Vertx command line utility](https://github.com/vertxai/vertx_cli/releases)
-- iOS and Android SDKs
+### Example using curl
+You can also use a command line utility like *curl* to directly invoke our API. For instance, a command to search for reference content using `sample.mp4` file as a query is provided below:
 
-# REST API
-REST API is the simplest way to start using Vertx technology. Original media files are uploaded to the Vertx backend servers. 
-Audio and video fingerprints extracted from the uploaded content are matched against reference content in the Vertx cloud.    
-
-You must have a valid API token to make API requests. To authenticate a request, you should include the API token in the Authorization header.
-```bash
-X-Session-Token: YOUR_VERTX_API_KEY
+```console
+$ curl -X POST "https://api.vertx.ai/v1/search/" -H "X-Session-Token: YOUR_VERTX_API_KEY" -F "media_file=@/path/to/sample.mp4" 
 ```
 
-## Usage example
-A CURL example of searching `sample.mp4` file in the public bucket is provided below.
-```bash
-curl -X POST "https://api.vertx.ai/v1/search/" -H "X-Session-Token: YOUR_VERTX_API_KEY" -F "media_file=@sample.mp4" 
-```
-One can find the complete set of API calls and try them in the [Vertx Playground](https://portal.vertx.ai/playground). 
 
-# Vertx command-line utility
-To start using vertx command line utility, you must have a valid API key. To authenticate a request, you should set `token` flag.
+## Vertx Command Line Utility
+One can utilize our command line tool to consume Vertx technology. This tool employs edge computing to extract fingerprints from media content and therefore, does not have additional limitations of REST API. 
 
-```bash
---token YOUR_VERTX_API_KEY
-```
+Download the latest binary (currently, we provide a binary for the Linux x86-64 platform) from the [Github releases](https://github.com/vertxai/vertx_cli/releases) page and run the following command:
 
-The latest binary for Linux x86_64 platform can be downloaded from [Github releases](https://github.com/vertxai/vertx_cli/releases) section.
-Vertx command line utility extracts fingerprints form media content and sends them to the Vertx backend. 
-Received fingerprints are uploaded to the Vertx cloud and all the found matches are returned to the client.    
+  - **Linux x86-64**
+    ```console
+    $ vertx --token YOUR_VERTX_API_KEY  sample.mp4
+    ```
 
-## Usage example
-Usage example of vertx command-line utility is provided below. File path to a query multimedia file has to be specified in addition to the `--token` flag.  
-```bash
-vertx --token YOUR_VERTX_API_KEY  sample.mp4                
+
+## Container Interface
+You can also use the provided container image to run our command line tool on the platforms where it is not yet available. Please, install [docker](https://docs.docker.com/get-docker/) or [podman](https://podman.io/getting-started/installation) container engines for your operating system and run the following command:
+
+```console
+$ docker run -v $(pwd)/data:/data --rm vertxai/vertx_cli:latest /app/vertx --token YOUR_VERTX_API_KEY /data/sample.mp4
 ```
 
-Search results are printed to stdout in JSON format. To store results into a file, stdout has to be redirected.
-```bash
-vertx --token YOUR_VERTX_API_KEY sample.mp4 > /tmp/search_result.json
+or
+
+```console
+$ podman run -v $(pwd)/data:/data --rm vertxai/vertx_cli:latest /app/vertx --token YOUR_VERTX_API_KEY /data/sample.mp4
 ```
 
-# Interpreting results
-Both, REST API and Vertx command line utility deliver search results in JSON format. The result for `sample.mp4` is provided below. 
+This command will download the latest image with Vertx command line utility and run the container. It will mount the `./data/` subdirectory, where query multimedia items are put, as a `/data/` directory inside the container. Therefore, before running the command create a `./data/` subdirectory in your current directory and put there the multimedia items to query, e.g., `sample.mp4`. 
 
-```bash
+
+# Interpreting Search Results
+All our tools deliver search results in JSON format. Each result contains the following JSON fields:
+
+- `media_content` indicates type of the content being searched (audio or video);
+- `source_path` - path of the source (query) file;
+- `source_uid` - unique identifier of the source (query) file;
+- `status` - status of the search call ("succeeded" or "failed"). 
+
+Each result also contains a list of matches with the reference content: 
+- `type` - type of the reference content (can be `"movie"` or `"music"`);
+- `title` - title of the reference content (track or movie title);
+- `uid` - a unique identifier of the reference content.
+
+Metadata information specific to movies:
+- `imdb_id` - IMDB identifier of the reference movie;
+- `year` - release year of the movie.
+
+Metadata information specific to music:
+- `artist` - artist;
+- `album` - album.
+
+Every match contains the following information:
+- `duration` - duration (in seconds) of the match segment;
+- `que_offset` - the offset to the match segment in the input (query) file (in seconds);
+- `ref_offset` - the offset to the match segment in the reference item (in seconds).
+
+
+For instance, the resulting JSON document for the `sample.mp4` file is the following:
+
+```json
 [
   {
     "matches": [
@@ -157,70 +167,34 @@ Both, REST API and Vertx command line utility deliver search results in JSON for
 ]
 ```
 
-The content from `sample.mp4` file matched with three items from the index: two movies and a song. 
-Video content matched with the "Troy" movie, while audio content matched with the "Anxiety" music track by "Black Eyed Peas" and "Papa Roach". 
-The song was also used as a soundtrack in "You Got Served" movie. Original audio track from the "Troy" movie was replaced with a soundtrack from a different movie. 
-Vertx was able to successfully identify all the matching segments, both audio and video.
+As you can see, Vertx has found three matching segments between the content from the `sample.mp4` file and items from the public index: two movies and a song. Video content matched with the "Troy" movie, while audio content matched with the "Anxiety" music track by "Black Eyed Peas" and "Papa Roach". The same song has been also used as a soundtrack in "You Got Served" movie, that explains the presence of the second movie among the match results. 
 
-## JSON output format
-Each result contains the following JSON fields:
-
-- `media_content` indicates type of the content being searched (audio or video)
-- `source_path` path of the source (query) file
-- `source_uid` unique identifier of the source (query) file
-- `status` status of the search call ("succeeded" or "failed"). 
-
-Each result also contains a list of matches with the reference content. 
-- `type` type of the reference content (can be `"movie"` or `"music"`)
-- `title` title of the reference content (track or movie title)
-- `uid` a unique identifier of the reference content
-
-Metadata information specific to movies:
-- `imdb_id` IMDB identifier of the reference movie
-- `year` movie release year 
-
-Metadata information specific to music:
-- `artist` artist
-- `album` album
-
-Every match contains the following information:
-- `duration` match duration (in seconds)
-- `que_offset` match offset in the input (query) file (in seconds)
-- `ref_offset` match offset in the reference item (in seconds)
+Thus, you can see that Vertx has successfully found all reference items segments, both audio and video.
 
 
-# Running vertx command-line utility from a docker container
-Vertx command-line utility can also be executed in any environment that supports docker runtime. 
-The steps required are:
-- Install docker for your OS environment. Instructions can be found [here](https://docs.docker.com/get-docker/).
-- Create a "data" folder which will be accessible from a docker container
 
-```bash
-mkdir data
-```
-- Copy `sample.mp4` file from the release package into "data" folder
-```bash
-cp sample.mp4 ./data
-```
-- Pull docker image containing vertx command line utility
-```bash
-docker pull vertxai/vertx_cli:latest
-``` 
-- Run vertx command-line utility from the container
-  
-```bash
-docker run -v $(pwd)/data:/data --rm vertxai/vertx_cli:latest /app/vertx --token YOUR_VERTX_API_KEY /data/sample.mp4
-```
+# Vertx Technology
+Vertx technology is based on extracting digital signatures from audio and video content (called digital fingerprints) and adding them to a searchable index. Much like human fingerprints, digital fingerprints uniquely identify a chunk of audio/video content. Fingerprints are highly compressed when compared to the original media content, and it's not possible to restore the original content from the digital fingerprints.
+
+The following figure shows the architecture of the Vertx system.
+
+![Vertx Architecture](images/vertx.png "Vertx Architecture")
+
+The system consists of **three main blocks**: Vertx cloud, Vertx backend and Vertx clients. Vertx cloud stores indices of reference content, and serves search and registration requests from Vertx backend. Vertx clients, which utilize REST API, upload media content for fingerprint extraction to the Vertx backend servers. Command line client utilities extract fingerprints by themselves. In that case, only extracted fingerprints are sent to the Vertx backend while the original content stays on-premise.   
+
+All the reference content in the Vertx cloud is organized into buckets. *Buckets can be private or public.* By default, all search requests are sent to the public bucket. It contains fingerprints for millions of songs and thousands of movies. 
+
+Private buckets contain the data of particular customers. It is available and managed only by this client.
+
 
 # Subscription plans
-Vertx API is provided free of charge with the following limitations:
-- The uploaded file size limit through REST API is 100 Mb. Files larger that 100 Mb are rejected by the Vertx backend. Vertx command-line utility does not enforce any size limits.
-- Maximum media content length per REST API call is 600 seconds. Everything beyond the first 600 seconds will be ignored.
-  If a larger media file has to be processed, it has to be split into multiple chunks using such tools as [FFmpeg](https://ffmpeg.org/)
-- The following rate limits are enforced:
-    - 5 API calls per 10 seconds
-    - 50000 requests per 24 hours
-    - That totals to 8300 hours of analyzed content per day
-- Private buckets are not available and no custom media content can be registered.
+Vertx API is provided **free of charge** with the following limitations:
+- 5 API calls per 10 seconds;
+- Search performed only in the public bucket;
+- Private buckets functionality is not available.
 
-Paid subscription plans are available if higher quotas limits are requested.
+Additional limitations on REST API:
+- File size up to 100 MB;
+- Media content length up to 600 seconds;
+
+If you need higher quotas limits or private bucket search functionality, you have to choose **paid subscription plan**. Please, [contact us](https://vertx.ai/#contact) to discuss your needs and agree on the plan!
